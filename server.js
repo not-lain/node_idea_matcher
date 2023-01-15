@@ -37,7 +37,6 @@ app.post('/manual', (req, res) => {
         }
         
     }
-    console.log(new_data)
     let out = MostSimilarNewData(new_data);
     key_columns = Object.keys(new_data);
     res.render('mymanual', { new_data: new_data, out: out })
