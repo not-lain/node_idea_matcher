@@ -1,3 +1,8 @@
+// new features
+// empty fields shouldn't be included in the calculations
+// top 3 most similar ideas
+
+
 const express = require('express')
 const xlsx = require('node-xlsx');
 const stringSimilarity = require('string-similarity');
@@ -27,8 +32,12 @@ app.post('/', (req, res) => {
 app.post('/manual', (req, res) => {
     let new_data = {}
     for (const element in req.body) {
-        new_data[element] = req.body[element]
+        if (req.body[element] !=''){
+            new_data[element] = req.body[element]
+        }
+        
     }
+    console.log(new_data)
     let out = MostSimilarNewData(new_data);
     key_columns = Object.keys(new_data);
     res.render('mymanual', { new_data: new_data, out: out })
