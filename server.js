@@ -1,7 +1,7 @@
 // new features
 // empty fields shouldn't be included in the calculations
 // top 3 most similar ideas
-
+n_similars = 3
 
 const express = require('express')
 const xlsx = require('node-xlsx');
@@ -26,7 +26,7 @@ app.post('/', (req, res) => {
     }
     let out = MostSimilarNewData(new_data);
     key_columns = Object.keys(new_data);
-    res.render('myindex', { new_data: new_data, out: out })
+    res.render('myindex', { new_data: new_data, out: out, n_similars: n_similars })
 })
 
 app.post('/manual', (req, res) => {
@@ -37,10 +37,9 @@ app.post('/manual', (req, res) => {
         }
         
     }
-    console.log(new_data)
     let out = MostSimilarNewData(new_data);
     key_columns = Object.keys(new_data);
-    res.render('mymanual', { new_data: new_data, out: out })
+    res.render('mymanual', { new_data: new_data, out: out, n_similars: n_similars })
 })
 
 
@@ -153,20 +152,30 @@ function MostSimilarIndexNewData(new_data) {
     // returns index of the line of the most similar idea
     let d_sims = DataSimilarityNewData(new_data);
     let sims = d_sims['sims']
-    let m = Math.max(...sims);
-    console.log("most similar coeff: %f",m)
-    let index = sims.indexOf(m);
-    return index
+    let biggest_sims = sims.sort((a, b) => b - a).slice(0, n_similars);
+    console.log("most similar coefficients: ")
+    let indexs = []
+    for(const i of biggest_sims){
+        console.log(i);
+        indexs.push(sims.indexOf(i));
+    }
+    return indexs;
 }
 
 
 // final data
 function MostSimilarNewData(new_data) {
     // returns most similar idea
-    let index = MostSimilarIndexNewData(new_data);
+    let indexes = MostSimilarIndexNewData(new_data);
     out = {}
     for (const column in d) {
-        out[column] = d[column][index]
+        out[column] = []
+    }
+
+    for (const column in d) {
+        for(index of indexes){
+            out[column].push(d[column][index])
+        }
     }
     return out;
 }

@@ -70,17 +70,25 @@
       </thead>
       <tbody>
         <tr>
+          <!-- original data -->
           <th scope="row">Original</th>
-          <td><%= locals.new_data['Title'] %></td>
-          <td><%= locals.new_data['Key words'] %></td>
-          <td><%= locals.new_data['Sector'] %></td>
+          <% for( let column in locals.new_data ) { %>
+          <td><%= locals.new_data[column] %></td>
+          <% } %>
         </tr>
-        <tr>
-          <th scope="row">similar</th>
-          <td><%= locals.out['Title'] %></td>
-          <td><%= locals.out['Key words'] %></td>
-          <td></td>
-        </tr>
+        <!-- most similars -->
+        
+          <% for( let index=0; index< locals.n_similars ;index++) { %>
+            <tr>
+          <th scope="row"><%= index %></th>
+          <% for( let column in locals.new_data ) { %>
+            <td>
+              <%= locals.out[column] %>
+            </td>
+            <% } %>
+            </tr>
+          <% } %>
+        
       </tbody>
     </table>
 
@@ -88,19 +96,23 @@
     
     <!-- output data -->
     <br>
-    <h3>most similar data : </h3>
+    <h3>most similar datas : </h3>
 
     <table class="table table-hover">
       <thead>
         <tr>
           <th scope="col">column</th>
-          <th scope="col">value</th>
+          <% for( let index=0; index< locals.n_similars ;index++) { %>
+            <th scope="col"> most similar <%= index %> </th>
+          <% } %>
         </tr>
       </thead>
       <% for( let column in locals.out ) { %>
         <tr>
           <td><%= column %></td>
+          <% for( let index=0; index< locals.n_similars ;index++) { %>
           <td><%= locals.out[column] %></td>
+          <% } %>
         </tr>
       
         <% } %>
